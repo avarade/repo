@@ -5,6 +5,7 @@ pipeline {
       steps {
         sh '''#!/bin/bash
 pwd'''
+        sh 'echo hello'
       }
     }
   }
