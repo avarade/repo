@@ -1,0 +1,55 @@
+kind: Deployment
+apiVersion: extensions/v1beta1
+metadata:
+  name: nginx
+  namespace: 1530269885019-dev-nginx
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        deploy: nginx
+        cbservice: nginx
+    spec:
+      containers:
+        - name: nginx
+          image: nginx
+          env:
+            - name: CB_ENV_NAME
+              value: 1530269885019-dev-nginx
+            - name: CB_CLUSTER_ID
+              value: 5b360864b1d06608518b3f53
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  labels:
+    service: nginx
+    cbservice: nginx
+  name: nginx
+  namespace: 1530269885019-dev-nginx
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 80
+      targetPort: 80
+      name: port80
+  selector:
+    deploy: nginx
+
+---
+kind: HorizontalPodAutoscaler
+apiVersion: autoscaling/v1
+metadata:
+  name: nginx
+  namespace: 1530269885019-dev-nginx
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1beta1
+    kind: Deployment
+    name: nginx
+  minReplicas: 1
+  maxReplicas: 1
+  targetCPUUtilizationPercentage: 50
+
