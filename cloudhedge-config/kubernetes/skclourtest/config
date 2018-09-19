@@ -1,0 +1,54 @@
+kind: Secret
+apiVersion: v1
+metadata:
+  name: 1537340364658-skclourtest-colortest-secret-docker
+  namespace: 1537340364658-skclourtest-colortest
+data:
+  .dockerconfigjson: eyJhdXRocyI6IHsgImh0dHBzOi8vaW5kZXguZG9ja2VyLmlvL3YxLyI6IHsgImF1dGgiOiAiWjNWeWRXNWhkR2c2VFVCdVFEbGxibVYwIiB9fX0K
+type: kubernetes.io/dockerconfigjson
+
+---
+kind: Deployment
+apiVersion: extensions/v1beta1
+metadata:
+  name: php
+  namespace: 1537340364658-skclourtest-colortest
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        deploy: php
+        cbservice: php
+    spec:
+      containers:
+        - name: php
+          image: gurunath/colortest
+          env:
+            - name: color
+              value: orange
+            - name: CB_ENV_NAME
+              value: 1537340364658-skclourtest-colortest
+            - name: CB_CLUSTER_ID
+              value: 5ba1f119d79f59000e318743
+      imagePullSecrets:
+        - name: 1537340364658-skclourtest-colortest-secret-docker
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  labels:
+    service: php
+    cbservice: php
+  name: php
+  namespace: 1537340364658-skclourtest-colortest
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 80
+      targetPort: 80
+      name: port80
+  selector:
+    deploy: php
+
