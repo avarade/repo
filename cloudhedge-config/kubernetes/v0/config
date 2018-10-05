@@ -1,0 +1,40 @@
+kind: Deployment
+apiVersion: extensions/v1beta1
+metadata:
+  name: bucketlist
+  namespace: 1538741883049-v0-sktest
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        deploy: bucketlist
+        cbservice: bucketlist
+    spec:
+      containers:
+        - name: bucketlist
+          image: amithaval/python_aws
+          env:
+            - name: CB_ENV_NAME
+              value: 1538741883049-v0-sktest
+            - name: CB_CLUSTER_ID
+              value: 5bb74b93b24e40000efd9cd5
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  labels:
+    service: bucketlist
+    cbservice: bucketlist
+  name: bucketlist
+  namespace: 1538741883049-v0-sktest
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 5002
+      targetPort: 5002
+      name: port5002
+  selector:
+    deploy: bucketlist
+
