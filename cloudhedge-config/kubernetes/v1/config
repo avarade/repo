@@ -1,0 +1,55 @@
+kind: Deployment
+apiVersion: extensions/v1beta1
+metadata:
+  name: bucketlist
+  namespace: 1538740832534-v1-bucketlistapp
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        deploy: bucketlist
+        cbservice: bucketlist
+    spec:
+      containers:
+        - name: bucketlist
+          image: amithaval/python
+          env:
+            - name: CB_ENV_NAME
+              value: 1538740832534-v1-bucketlistapp
+            - name: CB_CLUSTER_ID
+              value: 5bb74b93b24e40000efd9cd5
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  labels:
+    service: bucketlist
+    cbservice: bucketlist
+  name: bucketlist
+  namespace: 1538740832534-v1-bucketlistapp
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 5002
+      targetPort: 5002
+      name: port5002
+  selector:
+    deploy: bucketlist
+
+---
+kind: HorizontalPodAutoscaler
+apiVersion: autoscaling/v1
+metadata:
+  name: bucketlist
+  namespace: 1538740832534-v1-bucketlistapp
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1beta1
+    kind: Deployment
+    name: bucketlist
+  minReplicas: 1
+  maxReplicas: 1
+  targetCPUUtilizationPercentage: 50
+
