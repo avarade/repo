@@ -1,0 +1,130 @@
+kind: Deployment
+apiVersion: extensions/v1beta1
+metadata:
+  name: ch-node
+  namespace: 1538739618736-chatappv1-chatapp
+spec:
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        deploy: ch-node
+        cbservice: ch-node
+    spec:
+      containers:
+        - name: ch-node
+          image: avarade/ch-node
+          env:
+            - name: CH_REDIS_PREFIX
+              value: ch-redis.
+            - name: CH_REDIS_PORT
+              value: '6379'
+            - name: CB_ENV_NAME
+              value: 1538739618736-chatappv1-chatapp
+            - name: CB_CLUSTER_ID
+              value: 5bb74b93b24e40000efd9cd5
+
+---
+kind: Deployment
+apiVersion: extensions/v1beta1
+metadata:
+  name: ch-redis
+  namespace: 1538739618736-chatappv1-chatapp
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        deploy: ch-redis
+        cbservice: ch-redis
+    spec:
+      containers:
+        - name: ch-redis
+          image: avarade/ch-redis
+          env:
+            - name: CB_ENV_NAME
+              value: 1538739618736-chatappv1-chatapp
+            - name: CB_CLUSTER_ID
+              value: 5bb74b93b24e40000efd9cd5
+
+---
+kind: Deployment
+apiVersion: extensions/v1beta1
+metadata:
+  name: ch-nginx
+  namespace: 1538739618736-chatappv1-chatapp
+spec:
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        deploy: ch-nginx
+        cbservice: ch-nginx
+    spec:
+      containers:
+        - name: ch-nginx
+          image: avarade/ch-nginx
+          env:
+            - name: CH_NODE_PREFIX
+              value: ch-node.
+            - name: CH_NODE_PORT
+              value: '8080'
+            - name: CB_ENV_NAME
+              value: 1538739618736-chatappv1-chatapp
+            - name: CB_CLUSTER_ID
+              value: 5bb74b93b24e40000efd9cd5
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  labels:
+    service: ch-node
+    cbservice: ch-node
+  name: ch-node
+  namespace: 1538739618736-chatappv1-chatapp
+spec:
+  type: NodePort
+  ports:
+    - port: 8080
+      targetPort: 8080
+      name: port8080
+  selector:
+    deploy: ch-node
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  labels:
+    service: ch-redis
+    cbservice: ch-redis
+  name: ch-redis
+  namespace: 1538739618736-chatappv1-chatapp
+spec:
+  type: NodePort
+  ports:
+    - port: 6379
+      targetPort: 6379
+      name: port6379
+  selector:
+    deploy: ch-redis
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  labels:
+    service: ch-nginx
+    cbservice: ch-nginx
+  name: ch-nginx
+  namespace: 1538739618736-chatappv1-chatapp
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 80
+      targetPort: 80
+      name: port80
+  selector:
+    deploy: ch-nginx
+
