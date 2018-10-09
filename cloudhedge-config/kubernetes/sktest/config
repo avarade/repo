@@ -2,7 +2,7 @@ kind: Deployment
 apiVersion: extensions/v1beta1
 metadata:
   name: sktest
-  namespace: 1538567477249-sktest-sktest
+  namespace: 1539065724614-sktest-sktest
 spec:
   replicas: 1
   template:
@@ -15,10 +15,12 @@ spec:
         - name: sktest
           image: gurunath/colortest
           env:
+            - name: color
+              value: red
             - name: CB_ENV_NAME
-              value: 1538567477249-sktest-sktest
+              value: 1539065724614-sktest-sktest
             - name: CB_CLUSTER_ID
-              value: 5bb4ab0bee70e6000eacd87f
+              value: 5bb74b93b24e40000efd9cd5
 
 ---
 kind: Service
@@ -28,7 +30,7 @@ metadata:
     service: sktest
     cbservice: sktest
   name: sktest
-  namespace: 1538567477249-sktest-sktest
+  namespace: 1539065724614-sktest-sktest
 spec:
   type: LoadBalancer
   ports:
