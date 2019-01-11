@@ -1,8 +1,8 @@
 kind: Secret
 apiVersion: v1
 metadata:
-  name: 1534759199346-skapptest-colortest-secret-docker
-  namespace: 1534759199346-skapptest-colortest
+  name: 1547198178058-skapptest-colortest-secret-docker
+  namespace: 1547198178058-skapptest-colortest
 data:
   .dockerconfigjson: eyJhdXRocyI6IHsgImh0dHBzOi8vaW5kZXguZG9ja2VyLmlvL3YxLyI6IHsgImF1dGgiOiAiWjNWeWRXNWhkR2c2VFVCdVFEbGxibVYwIiB9fX0K
 type: kubernetes.io/dockerconfigjson
@@ -12,7 +12,7 @@ kind: Deployment
 apiVersion: extensions/v1beta1
 metadata:
   name: php
-  namespace: 1534759199346-skapptest-colortest
+  namespace: 1547198178058-skapptest-colortest
 spec:
   replicas: 1
   template:
@@ -26,13 +26,13 @@ spec:
           image: gurunath/colortest
           env:
             - name: color
-              value: lightblue
+              value: orange
             - name: CB_ENV_NAME
-              value: 1534759199346-skapptest-colortest
+              value: 1547198178058-skapptest-colortest
             - name: CB_CLUSTER_ID
-              value: 5b5f16c3d937cf000ee5b9f4
+              value: 5c3833819190b93b79e87006
       imagePullSecrets:
-        - name: 1534759199346-skapptest-colortest-secret-docker
+        - name: 1547198178058-skapptest-colortest-secret-docker
 
 ---
 kind: Service
@@ -42,7 +42,7 @@ metadata:
     service: php
     cbservice: php
   name: php
-  namespace: 1534759199346-skapptest-colortest
+  namespace: 1547198178058-skapptest-colortest
 spec:
   type: LoadBalancer
   ports:
