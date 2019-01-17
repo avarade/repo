@@ -1,8 +1,8 @@
 kind: Secret
 apiVersion: v1
 metadata:
-  name: 1539153879008-dev-colortest-secret-docker
-  namespace: 1539153879008-dev-colortest
+  name: 1547726606718-dev-colortest-secret-docker
+  namespace: 1547726606718-dev-colortest
 data:
   .dockerconfigjson: eyJhdXRocyI6IHsgImh0dHBzOi8vaW5kZXguZG9ja2VyLmlvL3YxLyI6IHsgImF1dGgiOiAiWjNWeWRXNWhkR2c2VFVCdVFEbGxibVYwIiB9fX0K
 type: kubernetes.io/dockerconfigjson
@@ -12,7 +12,7 @@ kind: Deployment
 apiVersion: extensions/v1beta1
 metadata:
   name: php
-  namespace: 1539153879008-dev-colortest
+  namespace: 1547726606718-dev-colortest
 spec:
   replicas: 1
   template:
@@ -28,11 +28,11 @@ spec:
             - name: color
               value: orange
             - name: CB_ENV_NAME
-              value: 1539153879008-dev-colortest
+              value: 1547726606718-dev-colortest
             - name: CB_CLUSTER_ID
-              value: 5bb74b93b24e40000efd9cd5
+              value: 5c3ffd7de6c3f0be690de5d2
       imagePullSecrets:
-        - name: 1539153879008-dev-colortest-secret-docker
+        - name: 1547726606718-dev-colortest-secret-docker
 
 ---
 kind: Service
@@ -42,7 +42,7 @@ metadata:
     service: php
     cbservice: php
   name: php
-  namespace: 1539153879008-dev-colortest
+  namespace: 1547726606718-dev-colortest
 spec:
   type: LoadBalancer
   ports:
